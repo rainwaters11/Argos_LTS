@@ -74,3 +74,9 @@ A task is not complete unless all of the following are true:
 - `test/Argos.t.sol` covers the change
 - formatting has been run with `forge fmt`
 - scripts and constructor args remain consistent with the active hook permissions
+
+### RULE: THE REMOTION SANDBOX (MISSION 6)
+- All video rendering and Remotion code MUST be generated inside a strictly isolated directory named `/demo-video`.
+- NEVER install Remotion dependencies in the root directory or the `/frontend` directory.
+- NEVER modify any files in `/src`, `/test`, `/script`, or `/frontend` while working on the Remotion video. 
+- The Remotion project is an independent visual asset, not part of the core protocol.
