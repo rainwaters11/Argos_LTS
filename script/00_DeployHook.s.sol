@@ -6,27 +6,27 @@ import {HookMiner} from "@uniswap/v4-periphery/src/utils/HookMiner.sol";
 
 import {BaseScript} from "./base/BaseScript.sol";
 
-import {Counter} from "../src/Counter.sol";
+import {Argos} from "../src/Argos.sol";
 
-/// @notice Mines the address and deploys the Counter.sol Hook contract
+/// @notice Mines the address and deploys the Argos hook contract
 contract DeployHookScript is BaseScript {
     function run() public {
         // hook contracts must have specific flags encoded in the address
-        uint160 flags = uint160(
-            Hooks.BEFORE_SWAP_FLAG | Hooks.AFTER_SWAP_FLAG | Hooks.BEFORE_ADD_LIQUIDITY_FLAG
-                | Hooks.BEFORE_REMOVE_LIQUIDITY_FLAG
-        );
+        uint160 flags = uint160(Hooks.BEFORE_SWAP_FLAG | Hooks.BEFORE_SWAP_RETURNS_DELTA_FLAG);
+
+        address initialOwner = deployerAddress;
+        address initialRiskController = deployerAddress;
 
         // Mine a salt that will produce a hook address with the correct flags
-        bytes memory constructorArgs = abi.encode(poolManager);
+        bytes memory constructorArgs = abi.encode(poolManager, initialOwner, initialRiskController);
         (address hookAddress, bytes32 salt) =
-            HookMiner.find(CREATE2_FACTORY, flags, type(Counter).creationCode, constructorArgs);
+            HookMiner.find(CREATE2_FACTORY, flags, type(Argos).creationCode, constructorArgs);
 
         // Deploy the hook using CREATE2
         vm.startBroadcast();
-        Counter counter = new Counter{salt: salt}(poolManager);
+        Argos argos = new Argos{salt: salt}(poolManager, initialOwner, initialRiskController);
         vm.stopBroadcast();
 
-        require(address(counter) == hookAddress, "DeployHookScript: Hook Address Mismatch");
+        require(address(argos) == hookAddress, "DeployHookScript: Hook Address Mismatch");
     }
 }

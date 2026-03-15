@@ -16,3 +16,13 @@ docs/
 
 # Node modules
 node_modules/
+# AI assistant tool directories
+.claude/
+.codex/
+.gemini/
+.opencode/
+
+# Forge-installed libs without .git dirs (installed via forge install / git submodule update)
+lib/forge-std/
+lib/hookmate/
+lib/uniswap-hooks/
