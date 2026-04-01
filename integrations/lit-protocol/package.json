@@ -1,0 +1,29 @@
+{
+  "name": "@argos-lts/lit-redemption-gate",
+  "version": "1.0.0",
+  "description": "Lit Protocol redemption gate for Argos LTS ERC-6909 parked claims",
+  "main": "redeem-with-lit.ts",
+  "scripts": {
+    "check": "ts-node redeem-with-lit.ts --check-only",
+    "redeem": "ts-node redeem-with-lit.ts"
+  },
+  "keywords": [
+    "lit-protocol",
+    "uniswap-v4",
+    "erc6909",
+    "argos-lts",
+    "plgenesis"
+  ],
+  "dependencies": {
+    "@lit-protocol/lit-node-client": "^6.0.0",
+    "@lit-protocol/constants": "^6.0.0",
+    "@lit-protocol/auth-helpers": "^6.0.0",
+    "ethers": "^6.11.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "ts-node": "^10.9.2",
+    "@types/node": "^20.12.7"
+  }
+}
