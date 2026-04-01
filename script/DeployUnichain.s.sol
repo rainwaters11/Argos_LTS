@@ -37,8 +37,8 @@ contract DeployUnichain is Script {
     // Unichain Sepolia known addresses
     // ─────────────────────────────────────────────────────────────────────────
 
-    /// @dev Uniswap V4 PoolManager on Unichain Sepolia
-    address public constant UNICHAIN_POOL_MANAGER = 0xC81462Fec8B23319F288047f8A03A57682a35C1A;
+    /// @dev Uniswap V4 PoolManager on Unichain Sepolia (verified 2026-04 from docs.uniswap.org/contracts/v4/deployments)
+    address public constant UNICHAIN_POOL_MANAGER = 0x00B036B58a818B1BC34d502D3fE730Db729e62AC;
 
     uint256 public constant UNICHAIN_SEPOLIA_CHAIN_ID = 1301;
 
@@ -73,7 +73,7 @@ contract DeployUnichain is Script {
         uint256 attempts;
         while (true) {
             predicted = address(
-                uint160(uint256(keccak256(abi.encodePacked(bytes1(0xff), CREATE2_FACTORY, salt, initcodeHash))))
+                uint160(uint256(keccak256(abi.encodePacked(bytes1(0xff), ARGOS_CREATE2_FACTORY, salt, initcodeHash))))
             );
             if (uint160(predicted) & ALL_HOOK_MASK == REQUIRED_FLAGS) break;
             unchecked {
