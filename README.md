@@ -1,6 +1,12 @@
 # 🛡️ Argos LTS — Liquidity Toxic Shield
 
-> **A Uniswap v4 hook on Unichain that detects toxic flow, parks risky swaps as ERC-6909 claims, and gates redemption with Lit Protocol.**
+### *Front-running the front-runner. Protecting LPs before toxic flow ever lands.*
+
+> **A Uniswap v4 hook on Unichain that detects toxic MEV arbitrage on Ethereum L1, intercepts the attack on Unichain before it executes, and parks risky swaps as ERC-6909 claims instead of reverting — with Lit Protocol gating trustless redemption.**
+
+**Argos LTS** is an on-chain liquidity protection layer for Uniswap v4 pools on Unichain. It watches Ethereum Mainnet for sandwich attack patterns using the Reactive Network, flags attacker addresses before their Unichain swap lands, and silently intercepts their trade — converting it into a redeemable ERC-6909 claim rather than throwing a hard revert. LPs are shielded from toxic arbitrage drain. Users preserve their transaction value. And Lit Protocol ensures the redemption gate is decentralized, auditable, and trustless.
+
+Built for DeFi protocols and LP operators who want MEV protection without sacrificing user experience.
 
 [![CI](https://github.com/rainwaters11/argos/actions/workflows/ci.yml/badge.svg)](https://github.com/rainwaters11/argos/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
