@@ -15,15 +15,18 @@
     "plgenesis"
   ],
   "dependencies": {
-    "@lit-protocol/lit-node-client": "^6.0.0",
-    "@lit-protocol/constants": "^6.0.0",
     "@lit-protocol/auth-helpers": "^6.0.0",
+    "@lit-protocol/constants": "^6.0.0",
+    "@lit-protocol/lit-node-client": "^6.0.0",
+    "dotenv": "^16.4.5",
     "ethers": "^6.11.0",
-    "dotenv": "^16.4.5"
+    "ipfs-only-hash": "^4.0.0"
   },
   "devDependencies": {
-    "typescript": "^5.4.5",
+    "@types/node": "^20.12.7",
     "ts-node": "^10.9.2",
-    "@types/node": "^20.12.7"
-  }
+    "typescript": "^5.4.5"
+  },
+  "author": "",
+  "license": "ISC"
 }

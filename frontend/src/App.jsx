@@ -71,14 +71,15 @@ const pool = { id: "0xc729b4764ab9a33ec1992c9e506f4f3e3ab9ec29e89833a57eba92e41e
 const verifiedState = { riskController: contracts.adapter, approvedPool: true, marketConfigured: true, enabled: true, riskState: "Safe", maxAbsAmount: "0" };
 const txs = [
   // v2 PLGenesis deployment
-  { label: "ArgosLTSHook v2 deployed + verified", hash: "0xfdbf678cf219a95fb4ff9975478f09fad4d2be15140604cd37fce21b8d1d1721", block: 48162660 },
+  { label: "ArgosLTSHook v2 deployed + verified",  hash: "0xfdbf678cf219a95fb4ff9975478f09fad4d2be15140604cd37fce21b8d1d1721", block: 48162660 },
+  { label: "setParkingMode — demo pool enabled",   hash: "0x940512568e4145592cac5187ef790923bdcfea5ff53e7cf5dce6865f991336f7", block: 48165069 },
   // v1 original demo transactions
-  { label: "Pool init + seed liquidity",          hash: "0x0bd0058b1bb3efb72d37aa61dc36bc336e8dcc3087dc1c8aa517e32ace084c4f", block: 46739974 },
-  { label: "configureMarket",                     hash: "0x6949762f3b06c8fab1212c41f40ea06165c5db5855c473083b48240703926ac5", block: 46740065 },
-  { label: "setRiskController to adapter",        hash: "0x41892685f69ccca6d1c3cf7d1a850eceb48c63e1f302f2a5897e5097c8a86611", block: 46740098 },
-  { label: "setApprovedPool demo pool",           hash: "0xbe710d77dcf721e8aa3ff4bde73b6eca88f3c03014565c208c1208ea81bbf428", block: 46740098 },
-  { label: "Reactive signal Blocked",             hash: "0xa2aef720ddb32b7eba77ff1a27515aecb4b03b32a37c4adae690319df9d0c5fc", block: 46741627 },
-  { label: "Owner reset Safe",                    hash: "0x6735114cf9f5fb887c21d8302e5be721832ae78d77ebe9a76bcab8d6e3c3a1e4", block: 46741627 },
+  { label: "Pool init + seed liquidity",           hash: "0x0bd0058b1bb3efb72d37aa61dc36bc336e8dcc3087dc1c8aa517e32ace084c4f", block: 46739974 },
+  { label: "configureMarket",                      hash: "0x6949762f3b06c8fab1212c41f40ea06165c5db5855c473083b48240703926ac5", block: 46740065 },
+  { label: "setRiskController to adapter",         hash: "0x41892685f69ccca6d1c3cf7d1a850eceb48c63e1f302f2a5897e5097c8a86611", block: 46740098 },
+  { label: "setApprovedPool demo pool",            hash: "0xbe710d77dcf721e8aa3ff4bde73b6eca88f3c03014565c208c1208ea81bbf428", block: 46740098 },
+  { label: "Reactive signal Blocked",              hash: "0xa2aef720ddb32b7eba77ff1a27515aecb4b03b32a37c4adae690319df9d0c5fc", block: 46741627 },
+  { label: "Owner reset Safe",                     hash: "0x6735114cf9f5fb887c21d8302e5be721832ae78d77ebe9a76bcab8d6e3c3a1e4", block: 46741627 },
 ];
 const short = (v) => `${v.slice(0,6)}...${v.slice(-4)}`;
 const explorer = (p) => `https://unichain-sepolia.blockscout.com/${p}`;
@@ -170,7 +171,8 @@ export default function App() {
           <Card className="lg:col-span-2">
             <CardHeader><CardTitle className="text-xl">System Overview</CardTitle><CardDescription>Live addresses and on-chain artifacts for the Argos demo stack.</CardDescription></CardHeader>
             <CardContent className="space-y-3">
-              <ContractRow label="Argos Hook" address={contracts.argos} />
+              <ContractRow label="ArgosLTSHook v2 (PLGenesis)" address={contracts.argosLTS} />
+              <ContractRow label="Argos Hook v1" address={contracts.argos} />
               <ContractRow label="ArgosRiskAdapter" address={contracts.adapter} />
               <ContractRow label="Mock LST (mLST)" address={contracts.mLST} />
               <ContractRow label="Mock WETH (mWETH)" address={contracts.mWETH} />
