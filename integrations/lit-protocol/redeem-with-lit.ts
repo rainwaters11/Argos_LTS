@@ -37,8 +37,14 @@ import { ethers } from "ethers";
 const ARGOS_HOOK_ADDRESS = process.env.ARGOS_HOOK_ADDRESS || "";
 const UNICHAIN_RPC_URL = process.env.UNICHAIN_RPC_URL || "https://sepolia.unichain.org";
 const USER_PRIVATE_KEY = process.env.USER_PRIVATE_KEY || "";
-const LIT_ACTION_CID = process.env.LIT_ACTION_CID || "QmArgosLTSRedemptionGateV2"; // pin lit-action.js to IPFS
+// LIT_ACTION_CID: set to the pinned IPFS CID for production.
+// If unset, falls back to inline code mode (reads lit-action.js directly) for demo.
+const LIT_ACTION_CID = process.env.LIT_ACTION_CID || "";
 const UNICHAIN_CHAIN_ID = 1301;
+
+// CIDv0 computed for lit-action.js (SHA256 via UnixFS dag-pb):
+// Qmab72dWoRsme1iUMQmP2ojWopgmycKipWqjMpCzydSZHD
+// Pin this file to IPFS and set LIT_ACTION_CID above for production.
 
 // Parse CLI flags
 const args = process.argv.slice(2);
@@ -143,20 +149,42 @@ async function main() {
     });
 
     // ── Execute Lit Action ─────────────────────────────────────────────────
+    // Production: use IPFS CID.  Demo fallback: pass action code inline.
+    const jsParams = {
+      userAddress,
+      currency: CURRENCY,
+      amount: AMOUNT,
+      argosHookAddress: ARGOS_HOOK_ADDRESS,
+      unichainRpcUrl: UNICHAIN_RPC_URL,
+      toAddress: ARGOS_HOOK_ADDRESS,
+      publicKey: "", // PKP public key — populated by Lit Protocol at runtime
+    };
+
     console.log("Executing Lit Action (threshold check + signing)...");
-    const response = await litClient.executeJs({
-      ipfsId: LIT_ACTION_CID,
-      sessionSigs,
-      jsParams: {
-        userAddress,
-        currency: CURRENCY,
-        amount: AMOUNT,
-        argosHookAddress: ARGOS_HOOK_ADDRESS,
-        unichainRpcUrl: UNICHAIN_RPC_URL,
-        toAddress: ARGOS_HOOK_ADDRESS,
-        publicKey: "", // PKP public key — populated by Lit Protocol at runtime
-      },
-    });
+    let response;
+    if (LIT_ACTION_CID) {
+      // Production: run from IPFS-pinned action
+      console.log("  Mode: IPFS CID", LIT_ACTION_CID);
+      response = await litClient.executeJs({
+        ipfsId: LIT_ACTION_CID,
+        sessionSigs,
+        jsParams,
+      });
+    } else {
+      // Demo/dev fallback: inline code (no IPFS pin required)
+      const fs = await import("fs");
+      const path = await import("path");
+      const actionCode = fs.readFileSync(
+        path.join(__dirname, "lit-action.js"),
+        "utf8"
+      );
+      console.log("  Mode: inline code (set LIT_ACTION_CID for production)");
+      response = await litClient.executeJs({
+        code: actionCode,
+        sessionSigs,
+        jsParams,
+      });
+    }
 
     const result = JSON.parse(response.response as string);
 
