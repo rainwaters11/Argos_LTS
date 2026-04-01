@@ -1,16 +1,24 @@
-# React + Vite
+# Argos LTS — Demo Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + Vite demo UI for the Argos LTS Uniswap v4 hook.
 
-Currently, two official plugins are available:
+## What this does
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Demonstrates the full ERC-6909 parking and Lit-gated redemption flow against the live deployed contract on Unichain Sepolia:
 
-## React Compiler
+- **Contract:** `0x4cD1d072fc30C5038c8F4163a2F3848f135fC088`
+- **Network:** Unichain Sepolia (Chain ID 1301)
+- **Verified:** [Blockscout ↗](https://unichain-sepolia.blockscout.com/address/0x4cD1d072fc30C5038c8F4163a2F3848f135fC088?tab=contract)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Running locally
 
-## Expanding the ESLint configuration
+```bash
+npm install
+npm run dev
+# Open http://localhost:5173
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## See also
+
+- [Root README](../README.md) — full project documentation, deployment info, and hackathon changelog
+- [Lit Protocol integration](../integrations/lit-protocol/) — redemption gate source code
