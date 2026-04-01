@@ -264,7 +264,350 @@ const ParkingScene = () => {
   );
 };
 
-// ─── Scene 5: Reactive Sentry Pulse ───
+// ─── Scene 5 [NEW]: Park vs Hard Revert ───
+const ParkVsRevertScene = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const headOp = interpolate(frame, [0, 20], [0, 1], { extrapolateRight: "clamp" });
+
+  // Swap token flies in on both sides from frame 20
+  const swapX_L = interpolate(frame, [20, 50], [-120, 460], { extrapolateRight: "clamp" });
+  const swapX_R = interpolate(frame, [20, 50], [-120, 460], { extrapolateRight: "clamp" });
+  const swapOp  = interpolate(frame, [20, 35], [0, 1],    { extrapolateRight: "clamp" });
+
+  // LEFT: revert flash at frame 60
+  const revertFlash = frame >= 58 && frame <= 75
+    ? interpolate(frame, [58, 62, 75], [0, 1, 0.4], { extrapolateRight: "clamp" }) : 0;
+  const xScale = frame >= 58 ? spring({ frame: frame - 58, fps, config: { damping: 10 } }) : 0;
+
+  // RIGHT: park glow at frame 60
+  const parkGlow = frame >= 58 ? spring({ frame: frame - 58, fps, config: { damping: 10 } }) : 0;
+  const claimBadge = frame >= 72 ? spring({ frame: frame - 72, fps, config: { damping: 12 } }) : 0;
+
+  // Bottom labels
+  const label1 = frame >= 80 ? spring({ frame: frame - 80, fps, config: { damping: 14 } }) : 0;
+  const label2 = frame >= 90 ? spring({ frame: frame - 90, fps, config: { damping: 14 } }) : 0;
+  const label3 = frame >= 100 ? spring({ frame: frame - 100, fps, config: { damping: 14 } }) : 0;
+
+  const dividerOp = interpolate(frame, [10, 30], [0, 1], { extrapolateRight: "clamp" });
+
+  return (
+    <AbsoluteFill style={{
+      background: `radial-gradient(ellipse at 50% 20%, #12121f, ${COLORS.bg})`,
+      fontFamily: "'Inter', sans-serif",
+      overflow: "hidden",
+    }}>
+      {/* Red flash overlay on left side */}
+      {revertFlash > 0 && (
+        <div style={{
+          position: "absolute", left: 0, top: 0, width: "50%", height: "100%",
+          background: `rgba(239,68,68,${revertFlash * 0.25})`,
+          pointerEvents: "none", zIndex: 5,
+        }} />
+      )}
+
+      {/* Title */}
+      <div style={{ position: "absolute", top: 40, width: "100%", textAlign: "center", opacity: headOp }}>
+        <h2 style={{ fontSize: 52, color: COLORS.white, fontWeight: 800, margin: 0 }}>
+          The Key Upgrade: <span style={{ color: COLORS.accentAlt }}>PARK</span> vs <span style={{ color: COLORS.red }}>REVERT</span>
+        </h2>
+        <p style={{ fontSize: 22, color: COLORS.muted, marginTop: 8 }}>
+          No more wasted gas or failed transactions for legitimate users
+        </p>
+      </div>
+
+      {/* Center divider */}
+      <div style={{
+        position: "absolute", left: "50%", top: 120, bottom: 0, width: 2,
+        background: `linear-gradient(to bottom, ${COLORS.border}, transparent)`,
+        opacity: dividerOp,
+      }} />
+
+      {/* ─── LEFT SIDE: Hard Revert (v1) ─── */}
+      <div style={{
+        position: "absolute", left: 0, top: 120, width: "50%", height: "calc(100% - 120px)",
+        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+        padding: "0 60px",
+      }}>
+        <div style={{
+          fontSize: 18, color: COLORS.red, fontWeight: 700, letterSpacing: 3,
+          marginBottom: 24, opacity: headOp,
+          background: `${COLORS.red}15`, padding: "6px 20px", borderRadius: 20,
+          border: `1px solid ${COLORS.red}40`,
+        }}>v1 — HARD REVERT</div>
+
+        {/* Swap token */}
+        <div style={{
+          transform: `translateX(${swapX_L - 460}px)`,
+          opacity: swapOp, fontSize: 48, marginBottom: 20,
+        }}>💸</div>
+
+        {/* Revert X */}
+        <div style={{
+          width: 160, height: 160, borderRadius: "50%",
+          background: xScale > 0 ? `radial-gradient(circle, ${COLORS.red}30, transparent)` : "transparent",
+          border: xScale > 0 ? `3px solid ${COLORS.red}` : `3px solid ${COLORS.border}`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 80, transform: `scale(${Math.max(0.3, xScale)})`,
+          boxShadow: revertFlash > 0 ? `0 0 ${40 * revertFlash}px ${COLORS.red}60` : "none",
+        }}>
+          {xScale > 0.3 ? "✗" : "→"}
+        </div>
+
+        <div style={{ marginTop: 32, textAlign: "center" }}>
+          {[{t:"❌ Transaction Reverted", c:COLORS.red, d:label1},
+            {t:"⛽ Gas Wasted", c:COLORS.amber, d:label2},
+            {t:"😤 User Must Retry", c:COLORS.muted, d:label3}].map((l, i) => (
+            <div key={i} style={{
+              fontSize: 20, color: l.c, marginBottom: 10,
+              opacity: l.d, transform: `translateY(${interpolate(l.d, [0,1],[12,0])}px)`,
+            }}>{l.t}</div>
+          ))}
+        </div>
+      </div>
+
+      {/* ─── RIGHT SIDE: PARK Mode (v2) ─── */}
+      <div style={{
+        position: "absolute", right: 0, top: 120, width: "50%", height: "calc(100% - 120px)",
+        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+        padding: "0 60px",
+      }}>
+        <div style={{
+          fontSize: 18, color: COLORS.green, fontWeight: 700, letterSpacing: 3,
+          marginBottom: 24, opacity: headOp,
+          background: `${COLORS.green}15`, padding: "6px 20px", borderRadius: 20,
+          border: `1px solid ${COLORS.green}40`,
+        }}>v2 — PARK MODE ✓</div>
+
+        {/* Swap token */}
+        <div style={{
+          transform: `translateX(${swapX_R - 460}px)`,
+          opacity: swapOp, fontSize: 48, marginBottom: 20,
+        }}>💸</div>
+
+        {/* Parking vault */}
+        <div style={{
+          width: 160, height: 160, borderRadius: 24,
+          background: parkGlow > 0
+            ? `radial-gradient(circle, ${COLORS.accentAlt}35, ${COLORS.card})`
+            : COLORS.card,
+          border: parkGlow > 0
+            ? `3px solid ${COLORS.accentAlt}`
+            : `3px solid ${COLORS.border}`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 70, transform: `scale(${Math.max(0.3, parkGlow)})`,
+          boxShadow: parkGlow > 0 ? `0 0 ${30 * parkGlow}px ${COLORS.accentAlt}50` : "none",
+        }}>🅿️</div>
+
+        {/* ERC-6909 claim badge */}
+        <div style={{
+          marginTop: 20,
+          opacity: claimBadge, transform: `scale(${claimBadge})`,
+          background: `${COLORS.accentAlt}20`, border: `1px solid ${COLORS.accentAlt}60`,
+          padding: "8px 24px", borderRadius: 12, fontSize: 18,
+          color: COLORS.accentAlt, fontWeight: 700,
+        }}>ERC-6909 Claim Minted ✓</div>
+
+        <div style={{ marginTop: 20, textAlign: "center" }}>
+          {[{t:"✅ Tx Settles Cleanly", c:COLORS.green, d:label1},
+            {t:"🔐 Tokens Safe On-Chain", c:COLORS.accent, d:label2},
+            {t:"♻️ Redeemable Anytime", c:COLORS.muted, d:label3}].map((l, i) => (
+            <div key={i} style={{
+              fontSize: 20, color: l.c, marginBottom: 10,
+              opacity: l.d, transform: `translateY(${interpolate(l.d, [0,1],[12,0])}px)`,
+            }}>{l.t}</div>
+          ))}
+        </div>
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+// ─── Scene 6 [NEW]: Lit Protocol Redemption Gate ───
+const LitGateScene = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const headOp = interpolate(frame, [0, 20], [0, 1], { extrapolateRight: "clamp" });
+
+  // Claim token appears
+  const claimIn = spring({ frame: frame - 10, fps, config: { damping: 12 } });
+
+  // Arrow 1: Claim → Lit TEE (frame 30)
+  const arrow1 = frame >= 30 ? interpolate(frame, [30, 55], [0, 1], { extrapolateRight: "clamp" }) : 0;
+
+  // Lit TEE node appears
+  const litIn = frame >= 50 ? spring({ frame: frame - 50, fps, config: { damping: 12 } }) : 0;
+
+  // On-chain read animation inside TEE
+  const readPulse = frame >= 55 ? interpolate(frame % 20, [0, 10, 20], [0.4, 1, 0.4]) : 0;
+
+  // Condition check
+  const checkIn = frame >= 65 ? spring({ frame: frame - 65, fps, config: { damping: 14 } }) : 0;
+  const checkPass = frame >= 78;
+  const checkColor = checkPass ? COLORS.green : COLORS.amber;
+
+  // Arrow 2: Lit TEE → Signature (frame 80)
+  const arrow2 = frame >= 80 ? interpolate(frame, [80, 100], [0, 1], { extrapolateRight: "clamp" }) : 0;
+
+  // PKP signature
+  const sigIn = frame >= 95 ? spring({ frame: frame - 95, fps, config: { damping: 12 } }) : 0;
+
+  // Arrow 3: Signature → Redeem (frame 100)
+  const arrow3 = frame >= 103 ? interpolate(frame, [103, 115], [0, 1], { extrapolateRight: "clamp" }) : 0;
+
+  // Redemption complete
+  const redeemIn = frame >= 110 ? spring({ frame: frame - 110, fps, config: { damping: 10 } }) : 0;
+  const redeemGlow = redeemIn;
+
+  const nodeStyle = (color, scale) => ({
+    width: 180, height: 180, borderRadius: 24,
+    background: `radial-gradient(circle, ${color}25, ${COLORS.card})`,
+    border: `2px solid ${color}70`,
+    display: "flex", flexDirection: "column",
+    alignItems: "center", justifyContent: "center",
+    transform: `scale(${scale})`, opacity: scale,
+    boxShadow: scale > 0.5 ? `0 0 ${20 * scale}px ${color}30` : "none",
+  });
+
+  const ArrowLine = ({ progress, color }) => (
+    <div style={{
+      width: 100, height: 3,
+      background: `linear-gradient(to right, ${color}, transparent)`,
+      clipPath: `inset(0 ${100 - progress * 100}% 0 0)`,
+      alignSelf: "center", margin: "0 8px",
+      opacity: progress > 0 ? 1 : 0,
+    }}>
+      <div style={{
+        position: "absolute", right: -10,
+        fontSize: 18, color, marginTop: -10,
+        opacity: progress > 0.8 ? 1 : 0,
+      }}>▶</div>
+    </div>
+  );
+
+  return (
+    <AbsoluteFill style={{
+      background: `radial-gradient(ellipse at 50% 60%, #0d0a2a, ${COLORS.bg})`,
+      fontFamily: "'Inter', sans-serif",
+    }}>
+      {/* Title */}
+      <div style={{ position: "absolute", top: 40, width: "100%", textAlign: "center", opacity: headOp }}>
+        <h2 style={{ fontSize: 52, color: COLORS.accentAlt, fontWeight: 800, margin: 0 }}>
+          🔐 Lit Protocol Redemption Gate
+        </h2>
+        <p style={{ fontSize: 22, color: COLORS.muted, marginTop: 8 }}>
+          Decentralized access control — no server owns this gate
+        </p>
+      </div>
+
+      {/* Flow row */}
+      <div style={{
+        position: "absolute", top: "50%", left: "50%",
+        transform: "translate(-50%, -50%)",
+        display: "flex", alignItems: "center", gap: 0,
+      }}>
+
+        {/* Node 1: Parked Claim */}
+        <div style={nodeStyle(COLORS.accentAlt, claimIn)}>
+          <div style={{ fontSize: 52 }}>🅿️</div>
+          <div style={{ fontSize: 16, color: COLORS.white, fontWeight: 700, marginTop: 8, textAlign: "center" }}>
+            Parked<br/>ERC-6909
+          </div>
+        </div>
+
+        {/* Arrow 1 */}
+        <ArrowLine progress={arrow1} color={COLORS.accent} />
+
+        {/* Node 2: Lit TEE */}
+        <div style={{
+          ...nodeStyle(COLORS.accentAlt, litIn),
+          width: 220, height: 220,
+          position: "relative",
+        }}>
+          {/* Pulsing ring inside TEE */}
+          {litIn > 0.3 && (
+            <div style={{
+              position: "absolute",
+              width: 200, height: 200, borderRadius: "50%",
+              border: `2px solid rgba(124,58,237,${readPulse})`,
+              top: 10, left: 10,
+            }} />
+          )}
+          <div style={{ fontSize: 52 }}>👁</div>
+          <div style={{ fontSize: 15, color: COLORS.accentAlt, fontWeight: 700, marginTop: 6, textAlign: "center" }}>
+            Lit Protocol TEE<br/>
+            <span style={{ fontSize: 12, color: COLORS.muted, fontWeight: 400 }}>
+              reads toxicExpiry(user)
+            </span>
+          </div>
+        </div>
+
+        {/* Condition Check Badge */}
+        <div style={{
+          position: "absolute",
+          top: -80,
+          left: "50%",
+          transform: "translateX(-50%)",
+          opacity: checkIn, scale: checkIn,
+        }}>
+          <div style={{
+            padding: "10px 24px", borderRadius: 12,
+            background: `${checkColor}15`,
+            border: `2px solid ${checkColor}`,
+            fontSize: 18, fontWeight: 700, color: checkColor,
+            whiteSpace: "nowrap",
+          }}>
+            {checkPass ? "✅ Window Elapsed — Eligible" : "⏳ Checking 5min window…"}
+          </div>
+        </div>
+
+        {/* Arrow 2 */}
+        <ArrowLine progress={arrow2} color={COLORS.green} />
+
+        {/* Node 3: PKP Signature */}
+        <div style={nodeStyle(COLORS.green, sigIn)}>
+          <div style={{ fontSize: 52 }}>🔏</div>
+          <div style={{ fontSize: 16, color: COLORS.white, fontWeight: 700, marginTop: 8, textAlign: "center" }}>
+            PKP<br/>Threshold Sig
+          </div>
+        </div>
+
+        {/* Arrow 3 */}
+        <ArrowLine progress={arrow3} color={COLORS.accent} />
+
+        {/* Node 4: Redemption */}
+        <div style={{
+          ...nodeStyle(COLORS.accent, redeemIn),
+          boxShadow: redeemGlow > 0.5 ? `0 0 ${40 * redeemGlow}px ${COLORS.accent}50` : "none",
+        }}>
+          <div style={{ fontSize: 52 }}>💎</div>
+          <div style={{ fontSize: 16, color: COLORS.white, fontWeight: 700, marginTop: 8, textAlign: "center" }}>
+            Tokens<br/>Redeemed ✓
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom note */}
+      <div style={{
+        position: "absolute", bottom: 50, width: "100%", textAlign: "center",
+        opacity: interpolate(frame, [108, 118], [0, 1], { extrapolateRight: "clamp" }),
+      }}>
+        <code style={{
+          fontSize: 19, color: COLORS.accentAlt,
+          background: `${COLORS.accentAlt}10`,
+          padding: "10px 28px", borderRadius: 10,
+          border: `1px solid ${COLORS.accentAlt}30`,
+        }}>
+          Lit Action published to IPFS · Runs in distributed TEE · No server required
+        </code>
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+// ─── Scene 7: Reactive Sentry Pulse ───
 const ReactiveSentryScene = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -1105,16 +1448,24 @@ export const ArgosDemo = () => {
       <Sequence from={280} durationInFrames={100}>
         <ParkingScene />
       </Sequence>
-      <Sequence from={380} durationInFrames={150}>
+      {/* NEW: Park vs Revert comparison */}
+      <Sequence from={380} durationInFrames={120}>
+        <ParkVsRevertScene />
+      </Sequence>
+      {/* NEW: Lit Protocol redemption gate */}
+      <Sequence from={500} durationInFrames={120}>
+        <LitGateScene />
+      </Sequence>
+      <Sequence from={620} durationInFrames={150}>
         <ReactiveSentryScene />
       </Sequence>
-      <Sequence from={530} durationInFrames={150}>
+      <Sequence from={770} durationInFrames={150}>
         <StateMachineScene />
       </Sequence>
-      <Sequence from={680} durationInFrames={150}>
+      <Sequence from={920} durationInFrames={150}>
         <AMMParkingScene />
       </Sequence>
-      <Sequence from={830} durationInFrames={70}>
+      <Sequence from={1070} durationInFrames={70}>
         <ClosingScene />
       </Sequence>
     </AbsoluteFill>
