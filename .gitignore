@@ -26,3 +26,5 @@ node_modules/
 lib/forge-std/
 lib/hookmate/
 lib/uniswap-hooks/
+.env.*
+integrations/lit-protocol/.env

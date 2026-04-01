@@ -2,6 +2,8 @@
 
 **Front-running the front-runner on Unichain.**
 
+> **PLGenesis Frontiers of Collaboration Hackathon — Existing Code track** | Sponsor integration: Lit Protocol | [View Verified Contract ↗](https://unichain-sepolia.blockscout.com/address/0x4cD1d072fc30C5038c8F4163a2F3848f135fC088)
+
 Argos LTS is a Uniswap V4 hook that intercepts toxic L1 arbitrage **before it reaches Unichain**, using the Reactive Network for cross-chain detection and Lit Protocol for decentralized claim redemption. Built for the **[PLGenesis Frontiers of Collaboration Hackathon](https://plgenesis.devfolio.co/)** — Crypto track (onchain economies, consumer DeFi).
 
 [![CI](https://github.com/rainwaters11/argos/actions/workflows/ci.yml/badge.svg)](https://github.com/rainwaters11/argos/actions/workflows/ci.yml)
@@ -111,15 +113,19 @@ This makes the appeal window verifiable and decentralized — no server owns the
 | `Argos.sol` (v1 hook) | [`0xCd6606e077b271316d09De8521ADBE72f8eB4088`](https://unichain-sepolia.blockscout.com/address/0xCd6606e077b271316d09De8521ADBE72f8eB4088) |
 | `ArgosRiskAdapter` | [`0x82EC3A310dF509A3bDe959DefBfeaa444Bb06a1B`](https://unichain-sepolia.blockscout.com/address/0x82EC3A310dF509A3bDe959DefBfeaa444Bb06a1B) |
 
-### v2 (PLGenesis Revamp, This Submission)
-*Deploy via `forge script script/DeployUnichain.s.sol` and update table*
+### v2 (PLGenesis Revamp — **Deployed & Verified**)
 
-| Contract | Address |
+| Field | Value |
 |---|---|
-| `ArgosLTSHook.sol` (v2) | *(post-deploy)* |
-| `ReactiveArbitrageSensor` | *(Reactive Network deployment)* |
-
-**Hook flags required:** `BEFORE_SWAP_FLAG \| BEFORE_SWAP_RETURNS_DELTA_FLAG` (bitmask `0x88`)
+| Contract | `ArgosLTSHook.sol` (v2) |
+| Address | [`0x4cD1d072fc30C5038c8F4163a2F3848f135fC088`](https://unichain-sepolia.blockscout.com/address/0x4cD1d072fc30C5038c8F4163a2F3848f135fC088) |
+| Network | Unichain Sepolia (Chain ID 1301) |
+| Status | ✅ **Verified** on Blockscout |
+| Deploy Tx | [`0xfdbf678c...d1d1721`](https://unichain-sepolia.blockscout.com/tx/0xfdbf678cf219a95fb4ff9975478f09fad4d2be15140604cd37fce21b8d1d1721) |
+| Block | `48162660` |
+| Owner | `0xfB9f232a7b84039480F3C7178900eE89920238f4` |
+| PoolManager | `0x00B036B58a818B1BC34d502D3fE730Db729e62AC` |
+| Hook flags | `BEFORE_SWAP_FLAG \| BEFORE_SWAP_RETURNS_DELTA_FLAG` (`0x88`) |
 
 ---
 

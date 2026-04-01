@@ -59,23 +59,29 @@ const TabsContent = ({ value, children, className = "" }) => {
 };
 
 const contracts = {
-  argos:   "0xCd6606e077b271316d09De8521ADBE72f8eB4088",
-  adapter: "0x82EC3A310dF509A3bDe959DefBfeaa444Bb06a1B",
-  mLST:    "0x1b46779584a8BFaE6F77418F6c3024FBA9e7B92a",
-  mWETH:   "0xA740013D461B6EEE7E774CAd7f5d049919AC801B",
+  // v2 ArgosLTSHook — PLGenesis submission (deployed block 48162660, verified)
+  argosLTS: "0x4cD1d072fc30C5038c8F4163a2F3848f135fC088",
+  // v1 hook — original stable deployment (preserved)
+  argos:    "0xCd6606e077b271316d09De8521ADBE72f8eB4088",
+  adapter:  "0x82EC3A310dF509A3bDe959DefBfeaa444Bb06a1B",
+  mLST:     "0x1b46779584a8BFaE6F77418F6c3024FBA9e7B92a",
+  mWETH:    "0xA740013D461B6EEE7E774CAd7f5d049919AC801B",
 };
 const pool = { id: "0xc729b4764ab9a33ec1992c9e506f4f3e3ab9ec29e89833a57eba92e41eebf21e", fee: 3000, tickSpacing: 60, price: "1:1", chainId: 1301, network: "Unichain Sepolia", callbackProxy: "0x9299472A6399Fd1027ebF067571Eb3e3D7837FC4" };
 const verifiedState = { riskController: contracts.adapter, approvedPool: true, marketConfigured: true, enabled: true, riskState: "Safe", maxAbsAmount: "0" };
 const txs = [
-  { label: "Pool init + seed liquidity",   hash: "0x0bd0058b1bb3efb72d37aa61dc36bc336e8dcc3087dc1c8aa517e32ace084c4f", block: 46739974 },
-  { label: "configureMarket",              hash: "0x6949762f3b06c8fab1212c41f40ea06165c5db5855c473083b48240703926ac5", block: 46740065 },
-  { label: "setRiskController to adapter", hash: "0x41892685f69ccca6d1c3cf7d1a850eceb48c63e1f302f2a5897e5097c8a86611", block: 46740098 },
-  { label: "setApprovedPool demo pool",    hash: "0xbe710d77dcf721e8aa3ff4bde73b6eca88f3c03014565c208c1208ea81bbf428", block: 46740098 },
-  { label: "Reactive signal Blocked",      hash: "0xa2aef720ddb32b7eba77ff1a27515aecb4b03b32a37c4adae690319df9d0c5fc", block: 46741627 },
-  { label: "Owner reset Safe",             hash: "0x6735114cf9f5fb887c21d8302e5be721832ae78d77ebe9a76bcab8d6e3c3a1e4", block: 46741627 },
+  // v2 PLGenesis deployment
+  { label: "ArgosLTSHook v2 deployed + verified", hash: "0xfdbf678cf219a95fb4ff9975478f09fad4d2be15140604cd37fce21b8d1d1721", block: 48162660 },
+  // v1 original demo transactions
+  { label: "Pool init + seed liquidity",          hash: "0x0bd0058b1bb3efb72d37aa61dc36bc336e8dcc3087dc1c8aa517e32ace084c4f", block: 46739974 },
+  { label: "configureMarket",                     hash: "0x6949762f3b06c8fab1212c41f40ea06165c5db5855c473083b48240703926ac5", block: 46740065 },
+  { label: "setRiskController to adapter",        hash: "0x41892685f69ccca6d1c3cf7d1a850eceb48c63e1f302f2a5897e5097c8a86611", block: 46740098 },
+  { label: "setApprovedPool demo pool",           hash: "0xbe710d77dcf721e8aa3ff4bde73b6eca88f3c03014565c208c1208ea81bbf428", block: 46740098 },
+  { label: "Reactive signal Blocked",             hash: "0xa2aef720ddb32b7eba77ff1a27515aecb4b03b32a37c4adae690319df9d0c5fc", block: 46741627 },
+  { label: "Owner reset Safe",                    hash: "0x6735114cf9f5fb887c21d8302e5be721832ae78d77ebe9a76bcab8d6e3c3a1e4", block: 46741627 },
 ];
 const short = (v) => `${v.slice(0,6)}...${v.slice(-4)}`;
-const explorer = (p) => `https://sepolia.uniscan.xyz/${p}`;
+const explorer = (p) => `https://unichain-sepolia.blockscout.com/${p}`;
 
 function StatCard({ title, value, description, icon: Icon }) {
   return (
