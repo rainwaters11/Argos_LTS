@@ -136,6 +136,21 @@ This directly enables the "fair redemption" story: a wrongly-flagged user has a 
 
 > **Required for Existing Code submissions.** The following changes were built during the PLGenesis hackathon event.
 
+### v1 → v2 at a Glance
+
+| Feature | v1 (Original) | v2 (PLGenesis — This Submission) |
+|---|---|---|
+| Toxic flagging granularity | Pool-level risk states | **Address-level** (`flagToxicAddress()`) |
+| Bad swap handling | Hard revert | **ERC-6909 PARK mode** (no revert, tokens safe) |
+| LP compensation | None | **PENALIZE mode** — 10% fee override with linear decay |
+| Redemption gate | On-chain only | **Lit Protocol TEE** — decentralized, verifiable |
+| Cross-chain detection | L1 Transfer events | **Sandwich pattern** — ≥2 swaps/block per sender |
+| Test coverage | 36 tests | **63 tests** (+27 new, including fuzz) |
+| Source code verified | ❌ | **✅ Blockscout verified** |
+| Deployment scripts | None | **CREATE2 + Unichain Sepolia scripts** |
+| Frontend | None | **React + Vite demo UI** |
+| Sponsor integration | None | **Lit Protocol** (`integrations/lit-protocol/`) |
+
 ### v2.0.0 — PLGenesis Revamp (2026-03-31)
 
 **Smart Contracts**
