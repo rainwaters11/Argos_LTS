@@ -338,6 +338,7 @@ forge script script/DeployUnichain.s.sol \
 - The demo uses a **manual trigger** for the Lit redemption flow (for reliability). In production, the full reactive path runs automatically: L1 event → Reactive RSC → cross-chain callback → `flagToxicAddress()` on Unichain.
 - The contract is **live and verified** on Unichain Sepolia — all code is inspectable on Blockscout.
 - The original v1 contracts and all 36 tests are **preserved intact** — this is a purely additive upgrade.
+- The frontend uses a **demo wallet** for display purposes. The core protocol logic — toxic detection, ERC-6909 parking, and Lit-gated redemption — is demonstrated end-to-end in the demo video and is live on Unichain Sepolia.
 
 ---
 
