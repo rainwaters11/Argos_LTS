@@ -26,7 +26,7 @@
 ## 🎬 Demo
 
 📹 **[Watch the 3-minute walkthrough →](#)**  
-*(link to YouTube / Loom after recording — shows the full flow from toxic detection to Lit-gated redemption)*
+*[(link to YouTube / Loom after recording — shows the full flow from toxic detection to Lit-gated redemption)](https://youtu.be/mhyES8E9KaM)*
 
 The demo walks through:
 1. Reactive Network detecting a sandwich pattern on L1 (block N)
